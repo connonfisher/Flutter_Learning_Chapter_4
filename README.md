@@ -271,6 +271,12 @@ flutter run lib/section4_2_constraints.dart
 | `textDirection` / `verticalDirection` | 文本方向 / 垂直方向，影响子组件排列顺序 |
 | 嵌套 Column + Expanded | 内层 `Column` 通过 `Expanded` 填充外层 `Column` 的剩余空间 |
 
+## 演示效果
+
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/4.3%20线性布局（Row和Column）-代码.png) | ![运行效果](演示截图/4.3%20线性布局（Row和Column）-运行效果.png) |
+
 ## 核心代码示例
 
 ### Row 对齐方式
