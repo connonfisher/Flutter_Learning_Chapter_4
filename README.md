@@ -640,6 +640,12 @@ flutter run lib/section4_6_stack.dart
 | `FractionalOffset` 坐标系 | 原点左上，`(0,0)` = 左上，`(1,1)` = 右下 |
 | `Center` | `Align` 的子类，`alignment: Alignment.center`，可选 `widthFactor` / `heightFactor` |
 
+## 演示效果
+
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/4.7%20对齐与相对定位（Align）-代码.png) | ![运行效果](演示截图/4.7%20对齐与相对定位（Align）-运行效果.png) |
+
 ## 核心代码示例
 
 ### Align 基本定位
