@@ -567,6 +567,12 @@ flutter run lib/section4_5_wrap_and_flow.dart
 
 > `Positioned` 组件始终按设置的坐标精确定位，不受 `StackFit` 和 `alignment` 影响。
 
+## 演示效果
+
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/4.6%20层叠布局（Stack和Positioned）-代码.png) | ![运行效果](演示截图/4.6%20层叠布局（Stack和Positioned）-运行效果.png) |
+
 ## 核心代码示例
 
 ### Stack fit=loose（默认）+ alignment: center
