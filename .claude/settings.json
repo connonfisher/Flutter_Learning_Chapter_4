@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"C:/Users/LENOVO/Pictures/Screenshots/屏幕截图 2026-05-18 172457.png\" \"d:/vs test/Flutter_Learning_Chapter_4/flutter_learning_chapter_4/演示截图/4.1 布局类组件简介-代码.png\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\LENOVO\\Pictures\\Screenshots"
+    ]
+  }
+}
