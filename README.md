@@ -1,101 +1,70 @@
-<!-- omit in toc -->
-# Flutter 学习 — 第四章：布局类组件
+# Flutter 布局类组件演示
 
-基于 [《Flutter实战·第二版》](https://book.flutterchina.club/chapter4/intro.html) 第四章的完整代码复现，涵盖 Flutter 布局系统的核心组件。
+Based on Chapter 4 ("布局类组件") of *Flutter 实战·第二版*, this project splits each section's sample code into independently runnable files with unified navigation.
 
-<!-- omit in toc -->
-## 目录
+## Environment & Quick Start
 
-- [项目简介](#项目简介)
-- [项目结构](#项目结构)
-- [4.1 布局类组件简介](#41-布局类组件简介)
-  - [功能介绍](#功能介绍-41)
-  - [演示截图](#演示截图-41)
-  - [核心代码](#核心代码-41)
-  - [关键要点](#关键要点-41)
-- [4.2 布局原理与约束](#42-布局原理与约束)
-  - [功能介绍](#功能介绍-42)
-  - [演示截图](#演示截图-42)
-  - [核心代码](#核心代码-42)
-  - [关键要点](#关键要点-42)
+- **Flutter 3.41.4 · Dart 3.11.1** — supports Android, Windows, and Web.
 
----
+```bash
+git clone https://github.com/connonfisher/Flutter_Learning_Chapter_4.git
+cd Flutter_Learning_Chapter_4
+flutter pub get
+flutter run                          # main navigation
+flutter run lib/section4_1_intro.dart  # single section
+```
 
-## 项目简介
-
-本项目完整覆盖了《Flutter实战·第二版》第四章「布局类组件」的全部 8 个小节，每小节对应一个独立的 Dart 文件，可单独运行。`main.dart` 提供统一导航，方便浏览所有小节。
-
-**参考链接：** [https://book.flutterchina.club/chapter4/intro.html](https://book.flutterchina.club/chapter4/intro.html)
-
-| 小节 | 内容 | 文件 |
-|------|------|------|
-| 4.1 | 布局类组件简介 | [section4_1_intro.dart](lib/section4_1_intro.dart) |
-| 4.2 | 布局原理与约束 | [section4_2_constraints.dart](lib/section4_2_constraints.dart) |
-| 4.3 | 线性布局（Row/Column）| [section4_3_row_and_column.dart](lib/section4_3_row_and_column.dart) |
-| 4.4 | 弹性布局（Flex）| [section4_4_flex.dart](lib/section4_4_flex.dart) |
-| 4.5 | 流式布局（Wrap/Flow）| [section4_5_wrap_and_flow.dart](lib/section4_5_wrap_and_flow.dart) |
-| 4.6 | 层叠布局（Stack/Positioned）| [section4_6_stack.dart](lib/section4_6_stack.dart) |
-| 4.7 | 对齐与相对定位（Align）| [section4_7_alignment.dart](lib/section4_7_alignment.dart) |
-| 4.8 | LayoutBuilder / AfterLayout | [section4_8_layoutbuilder.dart](lib/section4_8_layoutbuilder.dart) |
-
-### 项目结构
+## Project Structure
 
 ```
 lib/
-├── main.dart                          ← 综合导航主页
-├── section4_1_intro.dart              ← 各小节独立文件
-├── section4_2_constraints.dart
-├── section4_3_row_and_column.dart
-├── section4_4_flex.dart
-├── section4_5_wrap_and_flow.dart
-├── section4_6_stack.dart
-├── section4_7_alignment.dart
-└── section4_8_layoutbuilder.dart
-演示截图/                               ← 各小节演示截图
-├── 4.1 布局类组件简介-代码.png
-├── 4.1 布局类组件简介-运行效果.png
-├── 4.2 布局原理与约束-代码.png
-└── 4.2 布局原理与约束-运行效果.png
+├── main.dart                         # Entry: chapter index
+├── section4_1_intro.dart             # 4.1 布局类组件简介
+├── section4_2_constraints.dart       # 4.2 布局原理与约束
+├── section4_3_row_and_column.dart    # 4.3 线性布局（Row/Column）
+├── section4_4_flex.dart              # 4.4 弹性布局（Flex）
+├── section4_5_wrap_and_flow.dart     # 4.5 流式布局（Wrap/Flow）
+├── section4_6_stack.dart             # 4.6 层叠布局（Stack/Positioned）
+├── section4_7_alignment.dart         # 4.7 对齐与相对定位（Align）
+└── section4_8_layoutbuilder.dart     # 4.8 LayoutBuilder / AfterLayout
+演示截图/                               # Demo screenshots
 ```
+
+Each file includes its own `main()` entry for standalone execution.
+
+## main.dart — Chapter Index
+
+A card-based navigation page using `ListView` and `Navigator.push` to jump among all eight sections.
+
+**Reference:** [https://book.flutterchina.club/chapter4/intro.html](https://book.flutterchina.club/chapter4/intro.html)
 
 ---
 
 ## 4.1 布局类组件简介
 
-> 参考链接：[https://book.flutterchina.club/chapter4/intro.html](https://book.flutterchina.club/chapter4/intro.html)
+Introduces the three `RenderObjectWidget` base classes that underpin all Flutter layout widgets.
 
-### 功能介绍 {#功能介绍-41}
+- **LeafRenderObjectWidget** — leaf nodes without children (e.g. `Image`, `Text`)
+- **SingleChildRenderObjectWidget** — containers with exactly one child (e.g. `ConstrainedBox`, `DecoratedBox`, `Padding`, `Align`)
+- **MultiChildRenderObjectWidget** — containers with a `children` list (e.g. `Row`, `Column`, `Stack`, `Wrap`, `Flex`)
 
-本小节演示了 Flutter 中三类 `RenderObjectWidget` 基类的用途与区别：
+Inheritance chain: **Widget → RenderObjectWidget → (Leaf / SingleChild / MultiChild) RenderObjectWidget**. Each corresponds to a `RenderObject` subclass that implements the actual layout algorithm (e.g. `Row` → `RenderFlex`).
 
-- **LeafRenderObjectWidget** — 非容器类组件基类，无子节点（如 `Image`、`Text`）
-- **SingleChildRenderObjectWidget** — 单子组件基类（如 `ConstrainedBox`、`DecoratedBox`）
-- **MultiChildRenderObjectWidget** — 多子组件基类，通过 `children` 接收子组件数组（如 `Row`、`Column`、`Stack`）
+![4.1 运行效果](演示截图/4.1%20布局类组件简介-运行效果.png)
 
-继承关系：**Widget → RenderObjectWidget → (Leaf / SingleChild / MultiChild) RenderObjectWidget**
-
-### 演示截图 {#演示截图-41}
-
-| 代码截图 | 运行效果 |
-|----------|----------|
-| ![4.1代码](演示截图/4.1%20布局类组件简介-代码.png) | ![4.1运行](演示截图/4.1%20布局类组件简介-运行效果.png) |
-
-### 核心代码 {#核心代码-41}
+### Key patterns
 
 ```dart
-// 1. LeafRenderObjectWidget — 无子节点，如 Image
+// LeafRenderObjectWidget — 无子节点
 Image.network(
   'https://picsum.photos/200/100',
   width: 200,
   height: 100,
 );
 
-// 2. SingleChildRenderObjectWidget — 单子组件，如 ConstrainedBox + DecoratedBox
+// SingleChildRenderObjectWidget — 单子组件
 ConstrainedBox(
-  constraints: const BoxConstraints(
-    minWidth: double.infinity,
-    minHeight: 50,
-  ),
+  constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 50),
   child: DecoratedBox(
     decoration: BoxDecoration(
       color: Colors.blue.shade100,
@@ -103,108 +72,88 @@ ConstrainedBox(
     ),
     child: const Padding(
       padding: EdgeInsets.all(12.0),
-      child: Text('ConstrainedBox + DecoratedBox（单子组件组合）'),
+      child: Text('ConstrainedBox + DecoratedBox'),
     ),
   ),
 );
 
-// 3. MultiChildRenderObjectWidget — 多子组件，如 Row
+// MultiChildRenderObjectWidget — 多子组件
 Row(
   children: [
     Container(width: 60, height: 60, color: Colors.red,
-      child: const Center(child: Text('1', style: TextStyle(color: Colors.white)))),
+      child: const Center(child: Text('1'))),
     const SizedBox(width: 8),
     Container(width: 60, height: 60, color: Colors.green,
-      child: const Center(child: Text('2', style: TextStyle(color: Colors.white)))),
+      child: const Center(child: Text('2'))),
     const SizedBox(width: 8),
     Container(width: 60, height: 60, color: Colors.blue,
-      child: const Center(child: Text('3', style: TextStyle(color: Colors.white)))),
+      child: const Center(child: Text('3'))),
   ],
 );
 ```
 
-### 关键要点 {#关键要点-41}
-
-1. Flutter 中所有布局类组件都直接或间接继承自 `RenderObjectWidget`
-2. `LeafRenderObjectWidget` 是叶子节点，不能包含子组件（如 `Image`）
-3. `SingleChildRenderObjectWidget` 只能包含一个子组件（如 `Padding`、`Align`）
-4. `MultiChildRenderObjectWidget` 可包含多个子组件（如 `Row`、`Column`、`Stack`）
-5. 布局算法的具体实现位于对应的 `RenderObject` 对象中（如 `RenderFlex`、`RenderStack`）
+**Run:** `flutter run lib/section4_1_intro.dart`
 
 ---
 
 ## 4.2 布局原理与约束
 
-> 参考链接：[https://book.flutterchina.club/chapter4/constraints.html](https://book.flutterchina.club/chapter4/constraints.html)
+Covers Flutter's constraint system — the core layout rule dictating how parent and child widgets negotiate sizes.
 
-### 功能介绍 {#功能介绍-42}
+- **BoxConstraints** — a box constraint with `minWidth` / `maxWidth` / `minHeight` / `maxHeight`
+- **ConstrainedBox** — imposes additional constraints on its child; multiple nested constraints resolve to their intersection (the strictest)
+- **SizedBox** — syntactic sugar for `ConstrainedBox` + `BoxConstraints.tightFor`, forces a fixed size
+- **UnconstrainedBox** — removes the parent's constraint, letting the child size itself freely (may overflow)
 
-本小节演示了 Flutter 布局的核心原理——约束（Constraints），涵盖以下核心概念：
+Flutter layout rule: **constraints go down, sizes go up, the parent decides the position**.
 
-- **BoxConstraints** — 盒约束，包含 minWidth / maxWidth / minHeight / maxHeight 四个属性
-- **ConstrainedBox** — 为子组件施加额外约束，父约束与子约束取交集
-- **SizedBox** — 固定宽高的语法糖，内部等价于 `ConstrainedBox(BoxConstraints.tightFor(...))`
-- **多重限制** — 多个 ConstrainedBox 嵌套时，最终约束为所有约束的交集
-- **UnconstrainedBox** — 去除父级约束，让子组件按自身大小自由布局
+![4.2 运行效果](演示截图/4.2%20布局原理与约束-运行效果.png)
 
-Flutter 布局规则：**约束向下传递，尺寸向上传递，父节点最终决定子节点位置**。
-
-### 演示截图 {#演示截图-42}
-
-| 代码截图 | 运行效果 |
-|----------|----------|
-| ![4.2代码](演示截图/4.2%20布局原理与约束-代码.png) | ![4.2运行](演示截图/4.2%20布局原理与约束-运行效果.png) |
-
-### 核心代码 {#核心代码-42}
+### Key patterns
 
 ```dart
-// 1. ConstrainedBox — 施加最小高度约束
+// ConstrainedBox — 最小高度50，Container 的 height:5 被覆盖
 ConstrainedBox(
   constraints: const BoxConstraints(minHeight: 50.0),
   child: Container(
     height: 5.0,
-    child: const DecoratedBox(
-      decoration: BoxDecoration(color: Colors.red),
-    ),
+    child: const DecoratedBox(decoration: BoxDecoration(color: Colors.red)),
   ),
 );
 
-// 2. SizedBox — 固定宽高（等价于 ConstrainedBox + BoxConstraints.tightFor）
+// SizedBox — 固定宽高80×80
 const SizedBox(
   width: 80.0,
   height: 80.0,
-  child: DecoratedBox(
-    decoration: BoxDecoration(color: Colors.red),
-  ),
+  child: DecoratedBox(decoration: BoxDecoration(color: Colors.red)),
 );
 
-// 3. 多重限制 — 父约束与子约束取交集（最终: 90x60）
+// 多重限制 — 父60×60 与 子90×20 取交集 → 最终 90×60
 ConstrainedBox(
   constraints: const BoxConstraints(minWidth: 60.0, minHeight: 60.0), // 父
   child: ConstrainedBox(
     constraints: const BoxConstraints(minWidth: 90.0, minHeight: 20.0), // 子
-    child: redBox,
+    child: DecoratedBox(decoration: BoxDecoration(color: Colors.red)),
   ),
 );
 
-// 4. UnconstrainedBox — 去除父级限制
+// UnconstrainedBox — 去除父级限制
 ConstrainedBox(
   constraints: const BoxConstraints(minWidth: 60.0, minHeight: 100.0), // 父
   child: UnconstrainedBox(
     child: ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 90.0, minHeight: 20.0), // 子
-      child: redBox,
+      child: DecoratedBox(decoration: BoxDecoration(color: Colors.red)),
     ),
   ),
 );
 
-// 5. AppBar actions 中使用 UnconstrainedBox 去除父级约束
+// AppBar actions 中解除限制
 AppBar(
   actions: [
     UnconstrainedBox(
       child: SizedBox(
-        width: 20,
-        height: 20,
+        width: 20, height: 20,
         child: CircularProgressIndicator(
           strokeWidth: 3,
           valueColor: AlwaysStoppedAnimation(Colors.white70),
@@ -215,10 +164,8 @@ AppBar(
 );
 ```
 
-### 关键要点 {#关键要点-42}
+**Run:** `flutter run lib/section4_2_constraints.dart`
 
-1. 父组件通过 `BoxConstraints` 向子组件传递约束，子组件根据约束确定自身尺寸
-2. 多个 `ConstrainedBox` 嵌套时，最终约束 = 所有约束的**交集**（取最严格的值）
-3. `SizedBox` 本质是 `ConstrainedBox` + `BoxConstraints.tightFor` 的语法糖
-4. `UnconstrainedBox` 可"去除"父级约束，让子组件自由布局，但可能导致溢出
-5. AppBar 等系统组件内部会对 actions 施加限制，需要 `UnconstrainedBox` 解除
+---
+
+> All eight sections from Chapter 4 of *Flutter 实战·第二版*. Run `flutter run` at the project root for the unified navigation entry point.
