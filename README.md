@@ -378,6 +378,12 @@ flutter run lib/section4_3_row_and_column.dart
 | `Expanded` | 按 `flex` 比例分配父容器剩余空间 |
 | `Spacer` | `Expanded` + `SizedBox.shrink` 的语法糖，用于创建可伸缩的空白间隔 |
 
+## 演示效果
+
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/4.4%20弹性布局（Flex）-代码.png) | ![运行效果](演示截图/4.4%20弹性布局（Flex）-运行效果.png) |
+
 ## 核心代码示例
 
 ### Flex 水平方向（1:2 比例）
