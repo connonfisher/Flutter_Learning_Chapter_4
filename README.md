@@ -45,6 +45,10 @@ lib/
 
 `main.dart` 是项目的主入口，将所有 8 个小节整合为一个卡片式导航页面，点击任意卡片即可跳转到对应小节演示。
 
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/main%20章节总目录-代码.png) | ![运行效果](演示截图/main%20章节总目录-运行效果.png) |
+
 ```dart
 import 'section4_1_intro.dart';
 import 'section4_2_constraints.dart';
