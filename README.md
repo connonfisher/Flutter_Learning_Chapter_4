@@ -754,6 +754,12 @@ flutter run lib/section4_7_alignment.dart
 | `AfterLayout` | 自定义 `SingleChildRenderObjectWidget`，在 `performLayout` 后回调，获取尺寸和偏移量 |
 | `localToGlobal` | 将局部坐标转换为相对祖先组件的全局坐标 |
 
+## 演示效果
+
+| 代码 | 运行效果 |
+|:---:|:---:|
+| ![代码截图](演示截图/4.8%20LayoutBuilder和AfterLayout-代码.png) | ![运行效果](演示截图/4.8%20LayoutBuilder和AfterLayout-运行效果.png) |
+
 ## 核心代码示例
 
 ### LayoutBuilder 响应式布局
